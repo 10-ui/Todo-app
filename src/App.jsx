@@ -1,31 +1,43 @@
 import { useState, useRef } from 'react';
-import TodoList from './TodoList.jsx'
-
+import TodoList from './TodoList.jsx';
+import { v4 as uuid } from 'uuid';
 
 function App() {
-
   const [todos, setTodos] = useState([]);
 
-  const todoNameRef = useRef()
+  const todoNameRef = useRef();
 
   const AddTodo = () => {
     console.log(todos);
-    const name = todoNameRef.current.value
+    const name = todoNameRef.current.value;
+    if (name === '') return;
     setTodos((prevTodos) => {
-      return [...prevTodos, { id:'1', name: name, c: false }]
+      return [...prevTodos, { id: uuid(), name: name, c: false }];
     });
     todoNameRef.current.value = null;
   };
 
+  const toggleTodo = (id) => {
+    const newTodos = [...todos];
+    const todo = newTodos.find((todo) => todo.id === id);
+    todo.c = !todo.c;
+    setTodos(newTodos);
+  };
+
+  const handleClear = () => {
+    const newTodos = todos.filter((todo) => !todo.c);
+    setTodos(newTodos);
+  };
+
   return (
     <>
-      <TodoList tasks = { todos } />
-      <input type="text" ref={todoNameRef}/>
+      <TodoList tasks={todos} toggleTodo={toggleTodo} />
+      <input type="text" ref={todoNameRef} />
       <button onClick={() => AddTodo()}>Add Task</button>
-      <button>Delete Task</button>
-      <div>Task Limited : 0</div>
+      <button onClick={() => handleClear()}>Delete Task</button>
+      <div>Task Limited : {todos.filter((todo) => !todo.c).length}</div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,8 +1,7 @@
 import Task from './Task.jsx';
-// import {v4 as uuid } from 'uuid'
 
-const TodoList = ( {tasks} ) => {
-  return tasks.map((task) => <Task task={task}/>)
+const TodoList = ( {tasks, toggleTodo} ) => {
+  return tasks.map((task) => <Task task={task} key={task.id} toggleTodo={toggleTodo}/>)
 }
 
 export default TodoList;
